@@ -1,9 +1,11 @@
 package games.lightsout.godot.tts;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Locale;
 
 import org.godotengine.godot.Godot;
 import org.godotengine.godot.plugin.GodotPlugin;
@@ -14,6 +16,7 @@ import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.view.accessibility.AccessibilityManager;
+import android.util.Log;
 
 public class TTS extends GodotPlugin implements TextToSpeech.OnInitListener {
     private TextToSpeech tts = null;
@@ -22,11 +25,48 @@ public class TTS extends GodotPlugin implements TextToSpeech.OnInitListener {
     private float rate = 1f;
 
     private Integer utteranceId = 0;
+    private List<Locale> localeList = new ArrayList<Locale>();
 
-    public int speak(String text, boolean interrupt) {
+    public int speak(String text, boolean interrupt, String language) {
+        Log.v(TAG, "Speak : " + text);
+
+        if (localeList.size() == 0) {
+          Locale[] locales = Locale.getAvailableLocales();
+          for (Locale locale : locales) {
+              Log.v(TAG, "locale available : " + locale.toString());
+              int res = tts.isLanguageAvailable(locale);
+              if (res == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
+                  Log.v(TAG, "locale added : " + locale.toString());
+                  localeList.add(locale);
+              }
+          }
+        }
+
         int mode = TextToSpeech.QUEUE_ADD;
         if (interrupt)
             mode = TextToSpeech.QUEUE_FLUSH;
+
+        String target_str = "en_US";
+        if (language.startsWith("es"))
+            target_str = "es_ES";
+        else if (language.startsWith("fr"))
+            target_str = "fr_FR";
+        else if (language.startsWith("ko"))
+            target_str = "ko_KR";
+        else
+            target_str = "en_US";
+
+        Log.v(TAG, "target_str " + target_str);
+        for (Locale locale : localeList) {
+                if (locale.toString().equals(target_str)) {
+                  Log.v(TAG, "setLanguage with " + locale.toString());
+                  tts.setLanguage(locale);
+              }
+              else {
+                  Log.v(TAG, locale.toString() + "is not " + target_str);
+              }
+        }
+
         tts.speak(text, mode, null, this.utteranceId.toString());
         int rv = this.utteranceId.intValue();
         this.utteranceId++;
@@ -43,7 +83,7 @@ public class TTS extends GodotPlugin implements TextToSpeech.OnInitListener {
 
     public void set_volume(float volume) {
         this.volume = volume;
-        tts.Engine.KEY_PARAM_VOLUME = volume;
+        //tts.Engine.KEY_PARAM_VOLUME = Float.toString(volume);
     }
 
     public float get_rate() {
@@ -93,10 +133,15 @@ public class TTS extends GodotPlugin implements TextToSpeech.OnInitListener {
         }
     }
 
+private static final String TAG = "TTSlogs";
+
+
+
     public TTS(Godot godot) {
         super(godot);
         this.tts = new TextToSpeech(this.getActivity(), this);
         tts.setOnUtteranceProgressListener(new Listener());
+
     }
 
     @Override
