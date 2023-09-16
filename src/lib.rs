@@ -320,10 +320,13 @@ impl TTS {
     }
 }
 
-fn init(handle: InitHandle) {
-    env_logger::init();
-    handle.add_tool_class::<Utterance>();
-    handle.add_class::<TTS>();
-}
+struct TTSLibrary;
 
-godot_init!(init);
+#[gdnative::init::callbacks]
+impl GDNativeCallbacks for TTSLibrary {
+    fn nativescript_init(handle: InitHandle) {
+        env_logger::init();
+        handle.add_tool_class::<Utterance>();
+        handle.add_class::<TTS>();
+    }
+}
