@@ -28,6 +28,7 @@ func _init():
 			tts.connect("utterance_begin", self, "_on_utterance_begin")
 			tts.connect("utterance_end", self, "_on_utterance_end")
 			tts.connect("utterance_stop", self, "_on_utterance_stop")
+		print_debug("TTS available!")
 	else:
 		print_debug("TTS not available!")
 
