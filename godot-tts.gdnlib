@@ -6,8 +6,8 @@ Windows.32="res://addons/godot-tts/target/debug/32/godot_tts.dll"
 UWP.64="res://addons/godot-tts/target/debug/godot_tts.dll"
 X11.64="res://addons/godot-tts/target/debug/libgodot_tts.so"
 X11.32="res://addons/godot-tts/target/debug/32/libgodot_tts.so"
-OSX.64="res://addons/godot-tts/target/debug/libgodot_tts.dylib"
-iOS="res://addons/godot-tts/target/debug/libgodot_tts.a"
+OSX.64="res://addons/godot-tts/target/release/libgodot_tts.dylib"
+iOS.arm64="res://addons/godot-tts/target/release/libgodot_tts.a"
 
 [dependencies]
 

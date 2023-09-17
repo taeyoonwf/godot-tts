@@ -18,7 +18,7 @@ func _init():
 	elif Engine.has_singleton("GodotTTS"):
 		tts = Engine.get_singleton("GodotTTS")
 	else:
-		TTS = preload("godot-tts.gdns")
+		TTS = preload("res://addons/godot-tts/godot-tts.gdns")
 	if TTS and (TTS.can_instance() or Engine.editor_hint):
 		tts = TTS.new()
 	if tts:
@@ -193,7 +193,10 @@ var normal_rate_percentage setget , _get_rate_percentage
 func speak(text, interrupt := true, language := "en_US"):
 	var utterance
 	if tts != null:
-		utterance = tts.speak(text, interrupt, language)
+		if OS.get_name() == "Android":
+			utterance = tts.speak(text, interrupt, language)
+		else:
+			utterance = tts.speak(text, interrupt)
 	elif OS.has_feature('JavaScript'):
 		var code = (
 			"""
