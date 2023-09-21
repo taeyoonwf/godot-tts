@@ -201,13 +201,10 @@ func set_language(language):
 		elif language == "ko":
 			tts.set_language("ko-KR")
 
-func speak(text, interrupt := true, language := "en_US"):
+func speak(text, interrupt := true):
 	var utterance
 	if tts != null:
-		if OS.get_name() == "Android":
-			utterance = tts.speak(text, interrupt, language)
-		else:
-			utterance = tts.speak(text, interrupt)
+		utterance = tts.speak(text, interrupt)
 	elif OS.has_feature('JavaScript'):
 		var code = (
 			"""

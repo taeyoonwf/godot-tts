@@ -25,48 +25,15 @@ public class TTS extends GodotPlugin implements TextToSpeech.OnInitListener {
     private float rate = 1f;
 
     private Integer utteranceId = 0;
-    private List<Locale> localeList = new ArrayList<Locale>();
 
-    public int speak(String text, boolean interrupt, String language) {
-        Log.v(TAG, "Speak : " + text);
+    public void set_language(String language) {
+        tts.setLanguage(Locale.forLanguageTag(language));
+    }
 
-        if (localeList.size() == 0) {
-          Locale[] locales = Locale.getAvailableLocales();
-          for (Locale locale : locales) {
-              Log.v(TAG, "locale available : " + locale.toString());
-              int res = tts.isLanguageAvailable(locale);
-              if (res == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
-                  Log.v(TAG, "locale added : " + locale.toString());
-                  localeList.add(locale);
-              }
-          }
-        }
-
+    public int speak(String text, boolean interrupt) {
         int mode = TextToSpeech.QUEUE_ADD;
         if (interrupt)
             mode = TextToSpeech.QUEUE_FLUSH;
-
-        String target_str = "en_US";
-        if (language.startsWith("es"))
-            target_str = "es_ES";
-        else if (language.startsWith("fr"))
-            target_str = "fr_FR";
-        else if (language.startsWith("ko"))
-            target_str = "ko_KR";
-        else
-            target_str = "en_US";
-
-        Log.v(TAG, "target_str " + target_str);
-        for (Locale locale : localeList) {
-                if (locale.toString().equals(target_str)) {
-                  Log.v(TAG, "setLanguage with " + locale.toString());
-                  tts.setLanguage(locale);
-              }
-              else {
-                  Log.v(TAG, locale.toString() + "is not " + target_str);
-              }
-        }
-
         tts.speak(text, mode, null, this.utteranceId.toString());
         int rv = this.utteranceId.intValue();
         this.utteranceId++;
