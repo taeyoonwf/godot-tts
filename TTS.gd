@@ -189,17 +189,23 @@ func _get_normal_rate_percentage():
 
 
 var normal_rate_percentage setget , _get_rate_percentage
+var javascript_lang = "en-US"
 
 func set_language(language):
+	var lang_id = "en-US"
+	if language == "en":
+		lang_id = "en-US"
+	elif language == "fr":
+		lang_id = "fr-FR"
+	elif language == "es":
+		lang_id = "es-ES"
+	elif language == "ko":
+		lang_id = "ko-KR"
+
 	if tts != null:
-		if language == "en":
-			tts.set_language("en-US")
-		elif language == "fr":
-			tts.set_language("fr-FR")
-		elif language == "es":
-			tts.set_language("es-ES")
-		elif language == "ko":
-			tts.set_language("ko-KR")
+		tts.set_language(lang_id)
+	elif OS.has_feature('JavaScript'):
+		javascript_lang = lang_id
 
 func speak(text, interrupt := true):
 	var utterance
@@ -209,10 +215,11 @@ func speak(text, interrupt := true):
 		var code = (
 			"""
 			let utterance = new SpeechSynthesisUtterance("%s")
+			utterance.voice = window.speechSynthesis.getVoices().find((v) => v.lang === "%s")
 			utterance.rate = %s
 			utterance.volume = %s
 		"""
-			% [text.replace("\n", " "), javascript_rate, javascript_volume]
+			% [text.replace("\n", " "), javascript_lang, javascript_rate, javascript_volume]
 		)
 		if interrupt:
 			code += """
