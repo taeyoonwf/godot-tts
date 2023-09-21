@@ -118,7 +118,7 @@ private static final String TAG = "TTSlogs";
 
     @Override
     public List<String> getPluginMethods() {
-        return Arrays.asList("speak", "stop", "get_rate", "set_rate", "has_screen_reader", "is_speaking");
+        return Arrays.asList("set_language", "speak", "stop", "get_rate", "set_rate", "has_screen_reader", "is_speaking");
     }
 
     @Override
