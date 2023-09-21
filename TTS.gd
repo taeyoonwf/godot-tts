@@ -190,6 +190,16 @@ func _get_normal_rate_percentage():
 
 var normal_rate_percentage setget , _get_rate_percentage
 
+func set_language(language):
+	if tts != null:
+		if language == "en":
+			tts.set_language("en-US")
+		elif language == "fr":
+			tts.set_language("fr-FR")
+		elif language == "es":
+			tts.set_language("es-ES")
+		elif language == "ko":
+			tts.set_language("ko-KR")
 
 func speak(text, interrupt := true, language := "en_US"):
 	var utterance

@@ -253,6 +253,18 @@ impl TTS {
     }
 
     #[method]
+    fn set_language(&mut self, language: String) {
+        if let Ok(voices) = self.0.voices() {
+            let the_voice = voices.iter().find(|voice| { voice.language().as_str() == language });
+            if let Some(the_voice) = the_voice {
+                self.0.set_voice(the_voice).expect("Failed to set the new voice");
+            } else {
+                print!("No language available.");
+            }
+        }
+    }
+
+    #[method]
     fn speak(&mut self, message: String, interrupt: bool) -> Variant {
         if let Ok(id) = self.0.speak(message, interrupt) {
             let utterance: Instance<Utterance, Unique> = Instance::new();
