@@ -17,6 +17,7 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.view.accessibility.AccessibilityManager;
 import android.util.Log;
+import android.os.Bundle;
 
 public class TTS extends GodotPlugin implements TextToSpeech.OnInitListener {
     private TextToSpeech tts = null;
@@ -34,7 +35,9 @@ public class TTS extends GodotPlugin implements TextToSpeech.OnInitListener {
         int mode = TextToSpeech.QUEUE_ADD;
         if (interrupt)
             mode = TextToSpeech.QUEUE_FLUSH;
-        tts.speak(text, mode, null, this.utteranceId.toString());
+        Bundle params = new Bundle();
+        params.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, this.volume);
+        tts.speak(text, mode, params, this.utteranceId.toString());
         int rv = this.utteranceId.intValue();
         this.utteranceId++;
         return rv;
@@ -118,7 +121,7 @@ private static final String TAG = "TTSlogs";
 
     @Override
     public List<String> getPluginMethods() {
-        return Arrays.asList("set_language", "speak", "stop", "get_rate", "set_rate", "has_screen_reader", "is_speaking");
+        return Arrays.asList("set_language", "speak", "stop", "get_rate", "set_rate", "get_volume", "set_volume", "has_screen_reader", "is_speaking");
     }
 
     @Override

@@ -50,7 +50,7 @@ func _get_max_volume():
 	if OS.has_feature('JavaScript'):
 		return 1.0
 	else:
-		return 0
+		return 1.0
 
 var max_volume setget , _get_max_volume
 
@@ -71,6 +71,10 @@ func _set_volume(volume):
 		volume = self.min_volume
 	elif volume > self.max_volume:
 		volume = self.max_volume
+	if Engine.has_singleton("GodotTTS"):
+		tts.set_volume(volume)
+	elif tts != null:
+		tts.volume = volume
 	if OS.has_feature('JavaScript'):
 		javascript_volume = volume
 
