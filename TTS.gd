@@ -192,6 +192,29 @@ func _get_normal_rate_percentage():
 	return range_lerp(self.normal_rate, self.min_rate, self.max_rate, 0, 100)
 
 
+func _get_speed():
+	if Engine.has_singleton("GodotTTS"): # Android
+		return self.rate
+	elif tts != null:                    # iOS
+		return self.rate / (self.normal_rate * 0.8)
+	elif OS.has_feature('JavaScript'):   # Web
+		return self.rate / (self.normal_rate * 0.9)
+	else:
+		return 0
+
+
+func _set_speed(v):
+	if Engine.has_singleton("GodotTTS"): # Android
+		self.rate = v
+	elif tts != null:                    # iOS
+		self.rate = v * self.normal_rate * 0.8
+	elif OS.has_feature('JavaScript'):   # Web
+		self.rate = v * self.normal_rate * 0.9
+
+
+var speed setget _set_speed, _get_speed
+
+
 var normal_rate_percentage setget , _get_rate_percentage
 var javascript_lang = "en-US"
 
@@ -210,6 +233,7 @@ func set_language(language):
 		tts.set_language(lang_id)
 	elif OS.has_feature('JavaScript'):
 		javascript_lang = lang_id
+
 
 func speak(text, interrupt := true):
 	var utterance
